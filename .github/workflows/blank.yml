@@ -16,12 +16,12 @@ env:
   OTA_CHANNEL: "20.04/arm64/android9plus/stable"
   
 jobs:
-  build:
+  BuildKernel:
     runs-on: ubuntu-20.04
     steps:
       - name: checkout
       - uses: actions/checkout@v3        
-      - id: Build Kernel
+      - name: build kernel
         run: | 
           sudo apt update
           sudo apt install android-tools-mkbootimg bc bison build-essential ca-certificates cpio curl flex git kmod libssl-dev libtinfo5 python2 sudo unzip wget xz-utils -y --no-install-recommends
@@ -36,21 +36,25 @@ jobs:
         with:
           name: bootimg
           path: out/*
-  
-      - id: Deploying-DEV
-        run: |
-            sudo apt update
-            sudo apt install -y git img2simg jq sudo wget xz-utils
-            sudo -s git clone https://gitlab.com/ubports/community-ports/halium-generic-adaptation-build-tools build
-            DEVICE="$(source deviceinfo && echo $deviceinfo_codename)"
-            sudo -s ./build/prepare-fake-ota.sh out/device_${DEVICE}${DEV_TARBALL_VARIANT}.tar.xz ota
-            mkdir -p out
-            sudo -s ./build/system-image-from-ota.sh ota/ubuntu_command out
     
-      - name: upload devimg
-        uses: actions/upload-artifact@master
-        with:
-            name: ubuntuimg
-            path: |
+  BuildSystem:
+      runs-on: ubuntu-20.04
+      needs: BuildKernel   
+      steps:
+        - name: make systemimg
+          run: |
+              sudo apt update
+              sudo apt install -y git img2simg jq sudo wget xz-utils
+              sudo -s git clone https://gitlab.com/ubports/community-ports/halium-generic-adaptation-build-tools build
+              DEVICE="$(source deviceinfo && echo $deviceinfo_codename)"
+              sudo -s ./build/prepare-fake-ota.sh out/device_${DEVICE}${DEV_TARBALL_VARIANT}.tar.xz ota
+              mkdir -p out
+              sudo -s ./build/system-image-from-ota.sh ota/ubuntu_command out
+    
+        - name: upload devimg
+          uses: actions/upload-artifact@master
+          with:
+              name: ubuntuimg
+              path: |
                out/boot.img
                out/system.img
