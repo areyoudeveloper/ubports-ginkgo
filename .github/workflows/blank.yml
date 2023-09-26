@@ -1,4 +1,3 @@
-
 name: CI
 
 on:
@@ -35,9 +34,13 @@ jobs:
         with:
           name: bootimg
           path: out/*
-  
-      - name: make systemimg
-        run: |
+    
+  BuildSystem:
+      runs-on: ubuntu-20.04
+      needs: BuildKernel   
+      steps:
+        - name: make systemimg
+          run: |
               sudo apt update
               sudo apt install -y git img2simg jq sudo wget xz-utils
               sudo -s git clone https://gitlab.com/ubports/community-ports/halium-generic-adaptation-build-tools build
@@ -46,10 +49,10 @@ jobs:
               mkdir -p out
               sudo -s ./build/system-image-from-ota.sh ota/ubuntu_command out
     
-      - name: upload devimg
-        uses: actions/upload-artifact@master
-        with:
-          name: ubuntuimg
-          path: |
+        - name: upload devimg
+          uses: actions/upload-artifact@master
+          with:
+              name: ubuntuimg
+              path: |
                out/boot.img
                out/system.img
