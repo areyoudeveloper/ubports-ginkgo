@@ -38,7 +38,6 @@ jobs:
           path: out/*
   
       - id: Deploying-DEV
-      - name: deploy-devel
         run: |
             sudo apt update
             sudo apt install -y git img2simg jq sudo wget xz-utils
