@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# Wait for the property system to be up.
+while [ ! -e /dev/socket/property_service ]; do sleep 0.1; done
+
+# Init wlan interface on boot
+while [ ! -e /dev/wlan ]; do sleep 0.2; done
+echo 1 > /dev/ipa && echo ON > /dev/wlan
+
+# restart hfd service to enable vibrations
+systemctl restart hfd-service.service

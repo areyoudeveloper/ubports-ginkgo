@@ -1,0 +1,15 @@
+ginkgo:
+  Vendor: Xiaomi
+  PrettyName: Xiaomi REDMI NOTE 8
+  DeviceType: phone
+  GridUnit: 21
+  PrimaryOrientation: Portrait
+  SupportedOrientations:
+    - Portrait
+    - InvertedPortrait
+    - Landscape
+    - InvertedLandscape
+  FlashlightSysfsPath:
+    - /sys/class/leds/led:torch_0/brightness
+  FlashlightSwitchPath:
+    - /sys/class/leds/led:switch_0/brightness
