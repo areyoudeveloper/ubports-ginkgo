@@ -59,10 +59,8 @@ jobs:
           with:
               name: ubuntuimg
               path: |
-               out/boot.img
-               out/dtbo.img
-               out/system.img
-               
+               out/*
+              
   BuildSystemDevel:
       runs-on: ubuntu-20.04
       needs: BuildKernel   
@@ -78,7 +76,7 @@ jobs:
               sudo -s git clone https://gitlab.com/ubports/community-ports/halium-generic-adaptation-build-tools build
               sudo -s ./build/build.sh
               DEVICE="$(source deviceinfo && echo $deviceinfo_codename)"
-              sudo -s ./build/prepare-fake-ota.sh out/device_${{DEVICE}}${{DEV_TARBALL_VARIANT}}.tar.xz ota
+              sudo -s ./build/prepare-fake-ota.sh out/device_${DEVICE}${{DEV_TARBALL_VARIANT}}.tar.xz ota
               mkdir -p out
               sudo -s ./build/system-image-from-ota.sh ota/ubuntu_command out
     
