@@ -60,6 +60,7 @@ jobs:
               name: ubuntuimg
               path: |
                out/boot.img
+               out/dtbo.img
                out/system.img
                
   BuildSystemDevel:
@@ -87,4 +88,5 @@ jobs:
               name: ubuntuimgdevel
               path: |
                out/boot.img
+               out/dtbo.img
                out/system.img
